@@ -1,0 +1,7 @@
+{
+  "name": "com.domain.app.MovieSmarTV",
+  "description": "MovieSmarTV",
+  "dependencies": {
+    "@lightningjs/sdk": "^5.2.0"
+  }
+}
