@@ -13,15 +13,17 @@ export class Tile extends Lightning.Component {
       smooth: { color: 0xffedf6f9 },
       Label: {
         x: 20,
-        y: 705,
+        y: 700,
         color: 0xff006d77,
-        text: { fontSize: 32 },
+        text: {
+          fontFace: "Bold",
+          fontSize: 40,
+        },
       },
     };
   }
 
-  set item(obj) {
-    const { label, src } = obj;
+  set item({ label, src }) {
     this.patch({
       Image: { src },
       Label: { text: label.toString() },
