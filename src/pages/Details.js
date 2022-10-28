@@ -1,5 +1,5 @@
 import { Lightning, Router } from "@lightningjs/sdk";
-import { fetchTMDBApi } from "../utils/Api";
+import { Slider } from "../components/Slider";
 
 export default class Details extends Lightning.Component {
   static _template() {
@@ -14,14 +14,14 @@ export default class Details extends Lightning.Component {
         mountY: 0.5,
         flex: {},
         Image: {},
-        Text: {
+        Data: {
           x: 100,
           flex: {
             direction: "column",
           },
           Label: {
             color: 0xff006d77,
-            text: { fontFace: "Regular" },
+            text: { fontFace: "Bold", fontSize: 60 },
           },
           Description: {
             w: 1150,
@@ -30,7 +30,23 @@ export default class Details extends Lightning.Component {
           },
           Release: {
             color: 0xff83c5be,
-            text: { fontFace: "Bold" },
+            text: { fontFace: "Regular" },
+          },
+          SimilarMovies: {
+            rect: true,
+            color: 0xffedf6f9,
+            h: 500,
+            w: 1150,
+            clipping: true,
+            Title: {
+              x: 1150 / 2,
+              mountX: 0.5,
+              color: 0xff83c5be,
+              text: {
+                fontFace: "Regular",
+                text: "Similar Movies",
+              },
+            },
           },
         },
       },
@@ -50,33 +66,39 @@ export default class Details extends Lightning.Component {
   }
 
   _active() {
-    this.getSimilar(
-      `https://api.themoviedb.org/3/movie/${this.movieDetails?.id}/similar?api_key=8054417482da8da17e59776388d846c8`
-    );
+    this.tag("SimilarMovies").patch({
+      SimilarMovies: {
+        Slider: {
+          w: 1025,
+          x: 50,
+          y: 75,
+          index: 0,
+          type: Slider,
+          url: `https://api.themoviedb.org/3/movie/${this.movieDetails?.id}/similar?api_key=8054417482da8da17e59776388d846c8`,
+          imgWidth: 500 / 2,
+          imgHeight: 750 / 2,
+          fontSz: 30,
+        },
+      },
+    });
   }
 
-  async getSimilar(url) {
-    const data = await fetchTMDBApi(url);
-
-    console.log(data);
+  _getFocused() {
+    return this.tag("Slider");
   }
 
   set params({ movie }) {
     this.movieDetails = movie;
-    console.log(this.movieDetails);
+
     this.tag("Details").patch({
       Image: {
         src: `https://image.tmdb.org/t/p/w500/${this.movieDetails?.poster_path}`,
       },
     });
     this.tag("Details").patch({
-      Text: { Label: { text: this.movieDetails?.title } },
-    });
-    this.tag("Details").patch({
-      Text: { Description: { text: this.movieDetails?.overview } },
-    });
-    this.tag("Details").patch({
-      Text: {
+      Data: {
+        Label: { text: this.movieDetails?.title },
+        Description: { text: this.movieDetails?.overview },
         Release: { text: `Release date: ${this.movieDetails?.release_date}` },
       },
     });

@@ -3,8 +3,6 @@ import { Lightning } from "@lightningjs/sdk";
 export class Tile extends Lightning.Component {
   static _template() {
     return {
-      w: 500,
-      h: 750,
       rect: true,
       Image: {
         w: (w) => w,
@@ -12,38 +10,51 @@ export class Tile extends Lightning.Component {
       },
       smooth: { color: 0xffedf6f9 },
       Label: {
-        x: 20,
-        y: 700,
-        color: 0xff006d77,
+        x: 5,
+        y: (h) => h - 50,
+        color: 0xffe29578,
         text: {
-          fontFace: "Bold",
-          fontSize: 40,
+          fontFace: "Regular",
         },
       },
     };
   }
 
-  set item({ label, src }) {
+  _init() {
+    this.tag("Label").patch({
+      text: {
+        w: this.w - 5,
+      },
+    });
+  }
+
+  set item({ label, src, fontSz }) {
     this.patch({
       Image: { src },
-      Label: { text: label.toString() },
+      Label: { text: { text: label.toString(), fontSize: fontSz } },
     });
   }
 
   _focus() {
     this.patch({
-      smooth: { color: 0xff006d77, scale: 1.1 },
+      smooth: { scale: 1.1 },
       Label: {
-        smooth: { color: 0xffedf6f9 },
+        smooth: { color: 0xff006d77 },
+        text: {
+          fontFace: "Bold",
+        },
       },
     });
   }
 
   _unfocus() {
     this.patch({
-      smooth: { color: 0xffedf6f9, scale: 1.0 },
+      smooth: { scale: 1.0 },
       Label: {
-        smooth: { color: 0xff006d77 },
+        smooth: { color: 0xffe29578 },
+        text: {
+          fontFace: "Regular",
+        },
       },
     });
   }
