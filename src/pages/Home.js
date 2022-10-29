@@ -1,6 +1,9 @@
 import { Lightning } from "@lightningjs/sdk";
 import { Slider } from "../components/Slider";
 
+const API_KEY = process.env.APP_API_KEY;
+const API_ENDPOINT = process.env.APP_API_ENDPOINT;
+
 export default class Home extends Lightning.Component {
   static _template() {
     return {
@@ -17,7 +20,7 @@ export default class Home extends Lightning.Component {
         y: 270,
         mount: 0.5,
         type: Slider,
-        url: "https://api.themoviedb.org/3/trending/movie/week?api_key=8054417482da8da17e59776388d846c8",
+        url: `${API_ENDPOINT}/trending/movie/week?api_key=${API_KEY}`,
         imgWidth: 500,
         imgHeight: 750,
         fontSz: 40,
@@ -50,5 +53,13 @@ export default class Home extends Lightning.Component {
 
   _getFocused() {
     return this.tag("Slider");
+  }
+
+  _handleBack() {
+    return null;
+  }
+
+  pageTransition() {
+    return "down";
   }
 }

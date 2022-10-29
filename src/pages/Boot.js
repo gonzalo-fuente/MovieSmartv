@@ -1,12 +1,15 @@
-import { Lightning, Router } from "@lightningjs/sdk";
+import { Lightning, Router, Utils } from "@lightningjs/sdk";
 
 export default class Boot extends Lightning.Component {
   static _template() {
     return {
-      rect: true,
-      w: 1920,
-      h: 1080,
-      color: 0xff006d77,
+      Background: {
+        rect: true,
+        w: 1920,
+        h: 1080,
+        color: 0xee006d77,
+        src: Utils.asset("images/Background.jpeg"),
+      },
       Header: {
         mount: 0.5,
         x: 960,
@@ -33,5 +36,9 @@ export default class Boot extends Lightning.Component {
 
   _handleEnter() {
     Router.navigate("home");
+  }
+
+  pageTransition() {
+    return "up";
   }
 }

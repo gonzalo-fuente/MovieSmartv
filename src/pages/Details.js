@@ -1,6 +1,10 @@
 import { Lightning, Router } from "@lightningjs/sdk";
 import { Slider } from "../components/Slider";
 
+const API_KEY = process.env.APP_API_KEY;
+const API_ENDPOINT = process.env.APP_API_ENDPOINT;
+const API_IMG_ENDPOINT = process.env.APP_API_IMG_ENDPOINT;
+
 export default class Details extends Lightning.Component {
   static _template() {
     return {
@@ -74,7 +78,7 @@ export default class Details extends Lightning.Component {
           y: 75,
           index: 0,
           type: Slider,
-          url: `https://api.themoviedb.org/3/movie/${this.movieDetails?.id}/similar?api_key=8054417482da8da17e59776388d846c8`,
+          url: `${API_ENDPOINT}/movie/${this.movieDetails?.id}/similar?api_key=${API_KEY}`,
           imgWidth: 500 / 2,
           imgHeight: 750 / 2,
           fontSz: 30,
@@ -92,7 +96,7 @@ export default class Details extends Lightning.Component {
 
     this.tag("Details").patch({
       Image: {
-        src: `https://image.tmdb.org/t/p/w500/${this.movieDetails?.poster_path}`,
+        src: `${API_IMG_ENDPOINT}/${this.movieDetails?.poster_path}`,
       },
     });
     this.tag("Details").patch({
