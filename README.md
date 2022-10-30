@@ -1,31 +1,28 @@
 # MovieSmarTV
 
-## com.domain.app.MovieSmarTV
+MovieSmarTV is an online database of information related to films, that provide detailed information, such as title, description, similar movies and much more.
 
-### Getting started
+## Use cases
 
-> Before you follow the steps below, make sure you have the
-[Lightning-CLI](https://rdkcentral.github.io/Lightning-CLI/#/) installed _globally_ only your system
+1. Using the The Movie Database API, try to fetch information about upcoming movie releases. When the movie information has been fetched successfully, the user should be able to browse through the different movies and select one to view more information about.
 
-```
-npm install -g @lightningjs/cli
-```
+2. On the first page, it should display the movie's poster and title. When users click for more information about the movie, it should display a plot overview and its release date.
 
-#### Running the App
+3. What your interface should display on the first page:
 
-1. Install the NPM dependencies by running `npm install`
+- Image
+- Title
 
-2. Build the App using the _Lightning-CLI_ by running `lng build` inside the root of your project
+4. What your interface should display on the extra details page:
 
-3. Fire up a local webserver and open the App in a browser by running `lng serve` inside the root of your project
+- Image
+- Title
+- Release date
+- Plot overview
+- Similar movies
 
-#### Developing the App
+## How to run the App manually
 
-During development you can use the **watcher** functionality of the _Lightning-CLI_.
+Go to the project root directory, and in the terminal run...
 
-- use `lng watch` to automatically _rebuild_ your App whenever you make a change in the `src` or  `static` folder
-- use `lng dev` to start the watcher and run a local webserver / open the App in a browser _at the same time_
-
-#### Documentation
-
-Use `lng docs` to open up the Lightning-SDK documentation.
+### `lng dev` - runs the server on http://localhost:8080
