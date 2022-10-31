@@ -8,10 +8,18 @@ const API_IMG_ENDPOINT = process.env.APP_API_IMG_ENDPOINT;
 export default class Details extends Lightning.Component {
   static _template() {
     return {
-      rect: true,
-      w: 1920,
-      h: 1080,
-      color: 0xffedf6f9,
+      Background: {
+        rect: true,
+        w: 1920,
+        h: 1080,
+        color: 0xffedf6f9,
+        src: this.bkgImg,
+        shader: {
+          type: Lightning.shaders.Vignette,
+          magnitude: 2,
+          intensity: 0.1,
+        },
+      },
       Details: {
         x: 100,
         y: 540,
@@ -38,7 +46,7 @@ export default class Details extends Lightning.Component {
           },
           SimilarMovies: {
             rect: true,
-            color: 0xffedf6f9,
+            color: 0x00000000,
             h: 500,
             w: 1150,
             clipping: true,
@@ -69,7 +77,36 @@ export default class Details extends Lightning.Component {
     };
   }
 
+  // Receive the selected movie by props
+  set params({ movie }) {
+    this.movieDetails = movie;
+
+    this.tag("Details").patch({
+      Image: {
+        src: `${API_IMG_ENDPOINT}/w500/${this.movieDetails?.poster_path}`,
+      },
+    });
+    this.tag("Details").patch({
+      Data: {
+        Label: { text: this.movieDetails?.title },
+        Description: { text: this.movieDetails?.overview },
+        Release: { text: `Release date: ${this.movieDetails?.release_date}` },
+      },
+    });
+    this.getBkgImgUrl(
+      `${API_IMG_ENDPOINT}/original/${this.movieDetails?.backdrop_path}`
+    );
+  }
+
+  getBkgImgUrl(url) {
+    this.bkgImg = url;
+    this.tag("Background").patch({
+      src: this.bkgImg,
+    });
+  }
+
   _active() {
+    // Fetch similar movies and display them re-using the slider component
     this.tag("SimilarMovies").patch({
       SimilarMovies: {
         Slider: {
@@ -87,25 +124,9 @@ export default class Details extends Lightning.Component {
     });
   }
 
+  // Give focus to slider
   _getFocused() {
     return this.tag("Slider");
-  }
-
-  set params({ movie }) {
-    this.movieDetails = movie;
-
-    this.tag("Details").patch({
-      Image: {
-        src: `${API_IMG_ENDPOINT}/${this.movieDetails?.poster_path}`,
-      },
-    });
-    this.tag("Details").patch({
-      Data: {
-        Label: { text: this.movieDetails?.title },
-        Description: { text: this.movieDetails?.overview },
-        Release: { text: `Release date: ${this.movieDetails?.release_date}` },
-      },
-    });
   }
 
   _handleBack() {

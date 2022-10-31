@@ -12,6 +12,12 @@ export default class Home extends Lightning.Component {
         w: 1920,
         h: 1080,
         color: 0xffedf6f9,
+        src: this.bkgImg,
+        shader: {
+          type: Lightning.shaders.Vignette,
+          magnitude: 3,
+          intensity: 0.5,
+        },
       },
       Slider: {
         w: 1600,
@@ -24,6 +30,11 @@ export default class Home extends Lightning.Component {
         imgWidth: 500,
         imgHeight: 750,
         fontSz: 40,
+
+        // Receive the Bkg Img from the children
+        signals: {
+          getBkgImgUrl: true,
+        },
       },
       Footer: {
         mountX: 0.5,
@@ -51,6 +62,33 @@ export default class Home extends Lightning.Component {
     };
   }
 
+  // Receive the Bkg Img from the children
+  getBkgImgUrl(url) {
+    this.bkgImg = url;
+    this.tag("Background").patch({
+      src: this.bkgImg,
+    });
+
+    // Add fade in animation between movie selection
+    this.tag("Background")
+      .animation({
+        duration: 1.5,
+        repeat: 0,
+        actions: [
+          {
+            t: "",
+            p: "alpha",
+            v: {
+              0: 0,
+              1: 1,
+            },
+          },
+        ],
+      })
+      .start();
+  }
+
+  // Give focus to slider
   _getFocused() {
     return this.tag("Slider");
   }

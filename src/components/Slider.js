@@ -1,6 +1,8 @@
 import { Lightning, Router } from "@lightningjs/sdk";
 import { Tile } from "./Tile";
-import { fetchTMDBApi } from "../utils/Api";
+import { fetchTMDBApi } from "../utils/api";
+
+const API_IMG_ENDPOINT = process.env.APP_API_IMG_ENDPOINT;
 
 export class Slider extends Lightning.Component {
   static _template() {
@@ -14,15 +16,13 @@ export class Slider extends Lightning.Component {
   _init() {
     this.index = 0;
     this.page = 1;
-    this.base_url =
-      "https://api.themoviedb.org/3/trending/movie/week?api_key=8054417482da8da17e59776388d846c8";
-    this.movies = [];
     this.tag("Slider").patch({
       w: this.w,
       h: this.h,
     });
   }
 
+  // Fetch movies when active
   _active() {
     const newUrl = `${this.url}&page=${this.page}`;
     this.getMovies(newUrl);
@@ -44,11 +44,13 @@ export class Slider extends Lightning.Component {
           label: this.movies[i].title,
           src:
             this.movies[i].poster_path &&
-            `https://image.tmdb.org/t/p/w500/${this.movies[i].poster_path}`,
+            `${API_IMG_ENDPOINT}/w500/${this.movies[i].poster_path}`,
           fontSz: this.fontSz,
         },
       });
     }
+    // Send the Bkg img to the parent throw signals
+    this.handleBkgImg();
     this.tag("Wrapper").children = tiles;
   }
 
@@ -60,6 +62,9 @@ export class Slider extends Lightning.Component {
     const currentFocusX = currentFocus.x + currentWrapperX;
     const currentFocusOuterWidth = currentFocus.x + currentFocus.w;
 
+    // Send the Bkg img to the parent throw signals
+    this.handleBkgImg();
+
     if (currentFocusX < 0) {
       wrapper.setSmooth("x", -currentFocus.x);
     } else if (currentFocusOuterWidth > sliderW) {
@@ -67,10 +72,20 @@ export class Slider extends Lightning.Component {
     }
   }
 
+  // Send the Bkg Img to the parent throw signals
+  handleBkgImg() {
+    this.bkgImgUrl = `${API_IMG_ENDPOINT}/original/${
+      this.movies[this.index].backdrop_path
+    }`;
+    this.signal("getBkgImgUrl", this.bkgImgUrl);
+  }
+
+  // Select the movie and get more details
   _handleEnter() {
     Router.navigate("details", { movie: this.movies[this.index] });
   }
 
+  // Navigate through movies
   _handleLeft() {
     if (this.index === 0) {
       this.index = this.dataLength - 1;
@@ -80,6 +95,7 @@ export class Slider extends Lightning.Component {
     this.repositionWrapper();
   }
 
+  // Navigate through movies
   _handleRight() {
     if (this.index === this.dataLength - 1) {
       this.index = 0;
@@ -89,6 +105,7 @@ export class Slider extends Lightning.Component {
     this.repositionWrapper();
   }
 
+  // Go to the next page
   _handleDown() {
     this.page++;
     this.index = 0;
@@ -97,6 +114,7 @@ export class Slider extends Lightning.Component {
     this.getMovies(newUrl);
   }
 
+  // Go to the previous page
   _handleUp() {
     if (this.page !== 1) {
       this.page--;
