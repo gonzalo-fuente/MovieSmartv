@@ -25,4 +25,4 @@ MovieSmarTV is an online database of information related to films, that provide 
 
 Go to the project root directory, and in the terminal run...
 
-### `lng dev` - runs the server on http://localhost:8080
+### `lng dev` - runs the app on http://localhost:8080
